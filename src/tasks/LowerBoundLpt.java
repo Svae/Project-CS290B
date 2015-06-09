@@ -15,6 +15,7 @@ public class LowerBoundLpt implements LowerBound{
 	public LowerBoundLpt(int computers, List<Job> jobs) {
 		int jobLength = getRemainingJobLength(jobs);
 		lowerBound = ((double)jobLength)/computers;
+		System.out.println("Lower bound: " + lowerBound);
 	}
 
 	

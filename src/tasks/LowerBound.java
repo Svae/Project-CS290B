@@ -34,5 +34,5 @@ public interface LowerBound
 {
     double cost();
     
-    LowerBound make( Schedule parent, Job newJob, int id, boolean constraints );    
+    LowerBound make( Schedule parent, Job newJob, int id);    
 }

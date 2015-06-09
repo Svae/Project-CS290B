@@ -15,7 +15,7 @@ import api.ReturnDecomposition;
 import api.ReturnValue;
 import api.TaskRecursive;
 
-public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
+public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	
 	
 	private List<Job> jobs;
@@ -25,7 +25,7 @@ public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
 	private boolean constrains;
 	
 	
-	public ScheduleTasks(int computers, List<Job> jobs, boolean constraints) {
+	public ScheduleListTasks(int computers, List<Job> jobs, boolean constraints) {
 		this.computers = computers;
 		this.jobs = jobs;
 		this.constrains = constraints;
@@ -36,7 +36,7 @@ public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
 	
 	
 
-	public ScheduleTasks(int computers, ScheduleTasks parent, List<Job> jobs, int id, boolean constraints) {
+	public ScheduleListTasks(int computers, ScheduleListTasks parent, List<Job> jobs, int id, boolean constraints) {
 		this.computers = computers;
 		this.jobs = jobs;
 		this.constrains = constraints;
@@ -71,17 +71,17 @@ public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
 	@Override
 	public ReturnValue<ResultSchedule> solve() {
 		System.out.println("Solving");
-		final Stack<ScheduleTasks> stack = new Stack<>();
+		final Stack<ScheduleListTasks> stack = new Stack<>();
         stack.push( this );
         SharedSchedule sharedSchedule = ( SharedSchedule ) shared();
         Schedule shortestSchedule = sharedSchedule.schedule();
         double shortestScheduleCost = sharedSchedule.cost();
         while ( ! stack.isEmpty() ) 
         {
-        	ScheduleTasks currentTask = stack.pop();
-            List<ScheduleTasks> children = currentTask.children( shortestScheduleCost );
+        	ScheduleListTasks currentTask = stack.pop();
+            List<ScheduleListTasks> children = currentTask.children( shortestScheduleCost );
             System.out.println("Children: " + children.size());
-            for ( ScheduleTasks child : children )
+            for ( ScheduleListTasks child : children )
             {   // child lower bound < upper bound.
             	System.out.println("FOR");
                 if ( child.isComplete() )
@@ -105,10 +105,10 @@ public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
 		return new ReturnDecomposition(new CompareSchedules(), children(( (SharedSchedule) shared()).cost() ));
 	}
 
-	private List<ScheduleTasks> children(double cost) {
-		List<ScheduleTasks> children = new LinkedList<>();
+	private List<ScheduleListTasks> children(double cost) {
+		List<ScheduleListTasks> children = new LinkedList<>();
 		for (int i = 1; i <= computers; i++) {
-			ScheduleTasks child = new ScheduleTasks(computers, this, new ArrayList<Job>(jobs), i, this.constrains);
+			ScheduleListTasks child = new ScheduleListTasks(computers, this, new ArrayList<Job>(jobs), i, this.constrains);
 			if(child.lowerBound().cost() < cost){
 				children.add(child);
 			}

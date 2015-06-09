@@ -31,7 +31,7 @@ public class LowerBoundSimple implements LowerBound{
 	}
 
 	@Override
-	public LowerBound make(Schedule parent, Job newJob, int id, boolean constraints) {
+	public LowerBound make(Schedule parent, Job newJob, int id) {
 		return new LowerBoundSimple(parent, newJob, id, constraints);
 	}
 

@@ -16,14 +16,15 @@ public class LowerBoundSimple implements LowerBound{
 			jobLength += job.getTime();
 		}
 		lowerBound = ((double)jobLength)/computers;
+		System.out.println("Lower bound: " + lowerBound);
 	}
 	
-	public LowerBoundSimple(Schedule parent, Job newJob, int id, boolean constraints) {
-			parent.addJob(id, newJob);
-			lowerBound = parent.getMaxLength();
+	public LowerBoundSimple(ScheduleLptTasks parent, Job newJob, int id) {
+			Schedule schedule = parent.getSchedule();
+			schedule.addJob(id, newJob);
+			lowerBound = schedule.getMaxLength();
 	}
 
-	
 
 	@Override
 	public double cost() {
@@ -31,8 +32,8 @@ public class LowerBoundSimple implements LowerBound{
 	}
 
 	@Override
-	public LowerBound make(Schedule parent, Job newJob, int id) {
-		return new LowerBoundSimple(parent, newJob, id, constraints);
+	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
+		return new LowerBoundSimple(parent, newJob, id);
 	}
 
 }

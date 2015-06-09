@@ -28,7 +28,10 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		this.computers = computers;
 		this.jobs = jobs;
 		schedule = new Schedule(computers);
+		// Choose lowerbound type
 		lowerBound = new LowerBoundLpt(computers, jobs);
+		// lowerBound = new LowerBoundSimple(computers, jobs);
+
 		
 	}
 	
@@ -45,8 +48,7 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		}
 		this.schedule = new Schedule(computers, copy , parent.getSchedule().getMaxLength());
 		
-		//lowerBound = parent.lowerBound.make(this.schedule, this.jobs.remove(0), id);
-		lowerBound = new LowerBoundLpt(schedule, this.jobs.remove(0), id, computers, jobs);
+		lowerBound = parent.lowerBound.make(this, this.jobs.remove(0), id);
 		
 	}
 
@@ -108,5 +110,13 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	}
 	
 	private boolean isComplete() { return jobs.size() == 0; }
+	
+	public List<Job> getJobs(){
+		return jobs;
+	}
+	
+	public int getNumberOfComputers(){
+		return computers;
+	}
 	
 }

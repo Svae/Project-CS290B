@@ -31,9 +31,7 @@ public class LptTest {
 			r = g.nextInt(20) + 1;
 			jobs.add(new Job(i,r));
 		}
-		
-		//
-		
+				
 		new JobRunner<Schedule>("Bla", args).run(new ScheduleLptTasks(m, jobs), makeLpt(schedule, jobs));
 	}
 

@@ -33,6 +33,8 @@ import util.Schedule;
 public interface LowerBound 
 {
     double cost();
+
+	LowerBound make(ScheduleLptTasks parent, Job newJob, int id);
     
-    LowerBound make( Schedule parent, Job newJob, int id);    
+    //LowerBound make( Schedule parent, Job newJob, int id);    
 }

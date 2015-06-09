@@ -20,18 +20,20 @@ public class LowerBoundLpt implements LowerBound{
 
 	
 	
-	public LowerBoundLpt(Schedule parent, Job newJob, int id, int m, List<Job> jobs ) {
-		parent.addJob(id, newJob);
-		int max = parent.getMaxLength();
+	public LowerBoundLpt(ScheduleLptTasks parent, Job newJob, int id) {
+		List<Job> jobs = parent.getJobs();
+		Schedule schedule = parent.getSchedule();
+		schedule.addJob(id, newJob);
+		int max = schedule.getMaxLength();
 		int remaining = getRemainingJobLength(jobs);
-		List<Integer> schedules = parent.getAllJobLengths();
+		List<Integer> schedules = schedule.getAllJobLengths();
 		int diff = 0;
 		for (Integer len : schedules) {
 			diff += max - len;
 		}
 		
 		if(remaining<diff) lowerBound = max;
-		else lowerBound = max + (remaining-diff)/(double)m;
+		else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers();
 		
 	}
 
@@ -53,9 +55,11 @@ public class LowerBoundLpt implements LowerBound{
 
 
 	@Override
-	public LowerBound make(Schedule parent, Job newJob, int id) {
-		return new LowerBoundLpt(0,new ArrayList<Job>());
+	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
+		return new LowerBoundLpt(parent, newJob, id);
 	}
+
+
 
 	
 

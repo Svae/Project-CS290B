@@ -47,7 +47,7 @@ public class JobList {
 	public String prettyprint(){
 		String s = "";
 		for (Job job : jobs) {
-			s += job.getTime() + ", ";
+			s += "(" + job.getId() + "," + job.getTime()+"), ";
 		}
 		s += ": " + maxLength;
 		return s;

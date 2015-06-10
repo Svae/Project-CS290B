@@ -21,25 +21,21 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	private List<Job> jobs;
 	private int computers;
 	private Schedule schedule;
-	private LowerBound lowerBound;
-	private boolean constrains;
+	private LowerBoundList lowerBound;
 	
 	
-	public ScheduleListTasks(int computers, List<Job> jobs, boolean constraints) {
+	public ScheduleListTasks(int computers, List<Job> jobs) {
 		this.computers = computers;
 		this.jobs = jobs;
-		this.constrains = constraints;
 		schedule = new Schedule(computers);
 		lowerBound = new LowerBoundSimpleConstraints(computers, jobs);
-		
 	}
 	
 	
 
-	public ScheduleListTasks(int computers, ScheduleListTasks parent, List<Job> jobs, int id, boolean constraints) {
+	public ScheduleListTasks(int computers, ScheduleListTasks parent, List<Job> jobs, int id) {
 		this.computers = computers;
 		this.jobs = jobs;
-		this.constrains = constraints;
 
 
 		HashMap<Integer, JobList> copy = new HashMap<Integer, JobList>();
@@ -47,22 +43,18 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 		    copy.put(entry.getKey(), new JobList(entry.getValue()));
 		}
 		this.schedule = new Schedule(computers, copy , parent.getSchedule().getMaxLength());
-		if(constraints){
-			lowerBound = new LowerBoundSimpleConstraints(this.schedule, findAvailableJobs(), id, constraints);
-		}
-		else lowerBound = parent.lowerBound.make(this.schedule, this.jobs.remove(0), id, constraints);
-		//lowerBound = new LowerBoundLpt(schedule, this.jobs.remove(0), id, computers, jobs);
-		
+		Job  temp = findAvailableJobs();
+		lowerBound = new LowerBoundSimpleConstraints(this, temp, id);
+
 	}
 
 
 	@Override
 	public boolean isAtomic() {
-		System.out.println("Atomic: " + jobs.size());
 		return jobs.size() <= 4;
 	}
 	
-	public LowerBound lowerBound(){ return lowerBound; };
+	public LowerBoundList lowerBound(){ return lowerBound; };
 	
 	public double cost() { return lowerBound().cost(); }
 	
@@ -70,7 +62,6 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 
 	@Override
 	public ReturnValue<ResultSchedule> solve() {
-		System.out.println("Solving");
 		final Stack<ScheduleListTasks> stack = new Stack<>();
         stack.push( this );
         SharedSchedule sharedSchedule = ( SharedSchedule ) shared();
@@ -80,10 +71,8 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
         {
         	ScheduleListTasks currentTask = stack.pop();
             List<ScheduleListTasks> children = currentTask.children( shortestScheduleCost );
-            System.out.println("Children: " + children.size());
             for ( ScheduleListTasks child : children )
             {   // child lower bound < upper bound.
-            	System.out.println("FOR");
                 if ( child.isComplete() )
                 { 
                     shortestSchedule = child.getSchedule();
@@ -95,20 +84,23 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
                 } 
             }  
         } 
-		shared( new SharedSchedule(this.schedule, schedule.getMaxLength()));
-		return new ReturnValueSchedule(this, new ResultSchedule(schedule, schedule.getMaxLength()));
+		shared( new SharedSchedule(shortestSchedule, shortestSchedule.getMaxLength()));
+		return new ReturnValueSchedule(this, new ResultSchedule(shortestSchedule, shortestSchedule.getMaxLength()));
 	}
 
 	@Override
 	public ReturnDecomposition divideAndConquer() {
-		System.out.println("Divide");
 		return new ReturnDecomposition(new CompareSchedules(), children(( (SharedSchedule) shared()).cost() ));
 	}
 
 	private List<ScheduleListTasks> children(double cost) {
 		List<ScheduleListTasks> children = new LinkedList<>();
 		for (int i = 1; i <= computers; i++) {
-			ScheduleListTasks child = new ScheduleListTasks(computers, this, new ArrayList<Job>(jobs), i, this.constrains);
+			List<Job> jobList = new ArrayList<Job>();
+			for(Job job : jobs){
+				jobList.add(new Job(job));
+			}
+			ScheduleListTasks child = new ScheduleListTasks(computers, this, jobList, i);
 			if(child.lowerBound().cost() < cost){
 				children.add(child);
 			}
@@ -118,39 +110,38 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	
 	private boolean isComplete() { return jobs.isEmpty(); }
 
+
+	
+	
 	private Job findAvailableJobs() {
-		Job temp;
-		Job max;
-		boolean ava;
-		for(Job j: jobs){
-			ava = true;
-			temp = null;
-			max = null;
-			if (j.hasDependences()){
-				List<Integer> l = j.getDependences();
-			
-				for (Integer id : l) {
-					temp = schedule.containsJob(id);
-					if(schedule.containsJob(id) == null) ava = false;
-					else{
-						if(j == null) max = temp;
-						else {
-							if(j.getStop()<temp.getStop()) max = temp;
-						}
-					}
-				}
-				if(ava){
-					System.out.println("Before: " + jobs.size());
-					jobs.remove(j);
-					System.out.println("After: " + jobs.size());
-					j.setStart(max.getStop());
-					return j;
+		Job temp = null;
+		for(Job job : jobs){
+			if(job.hasDependences()){
+				temp = checkDependences(job);
+				if(temp != null){
+					job.setStart(temp.getStop());
+					jobs.remove(job);
+					return job;
 				}
 			} else {
-				return j;
+				jobs.remove(job);
+				return job;
 			}
 		}
 		return null;
+	}
+
+	private Job checkDependences(Job job){
+		Job temp = null;
+		Job max = null;
+		for(Integer id : job.getDependences()){
+			temp = schedule.containsJob(id);
+			if(temp != null){
+				if(max == null) max = temp;
+				else if(max.getStop() < temp.getStop()) max = temp;
+			} else return null;
+		}
+		return temp;
 	}
 	
 }

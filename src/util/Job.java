@@ -13,12 +13,24 @@ public class Job {
 	public Job(int id, int time) {
 		this.id = id;
 		this.time = time;
+		this.start = 0;
+		this.stop = 0;
 	}
 	
 	public Job(int id, int time, List<Integer> dependences){
 		this.id = id;
 		this.time = time;
 		this.dependences = dependences;
+		this.start = 0;
+		this.stop = 0;
+	}
+	
+	public Job(Job job){
+		this.id = job.id;
+		this.time = job.time;
+		this.start = job.start;
+		this.stop = job.stop;
+		if(job.hasDependences()) this.dependences = job.dependences;
 	}
 
 	public int getId() {

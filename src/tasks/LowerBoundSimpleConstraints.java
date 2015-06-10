@@ -2,10 +2,12 @@ package tasks;
 
 import java.util.List;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import util.Job;
 import util.Schedule;
 
-public class LowerBoundSimpleConstraints implements LowerBound{
+public class LowerBoundSimpleConstraints implements LowerBoundList{
 
 	private double lowerBound;
 	
@@ -16,16 +18,20 @@ public class LowerBoundSimpleConstraints implements LowerBound{
 			jobLength += job.getTime();
 		}
 		lowerBound = ((double)jobLength)/computers;
+		System.out.println("Lower bound: " + lowerBound);
 	}
 	
-	public LowerBoundSimpleConstraints(Schedule parent, Job newJob, int id, boolean constraints) {
-			int diff = newJob.getStart() - parent.getListMax(id);
-			newJob.addProccessTime(diff);
-			parent.addJob(id, newJob);
-			lowerBound = parent.getMaxLength();
+	public LowerBoundSimpleConstraints(ScheduleListTasks parent, Job newJob, int id) {
+			Schedule schedule = parent.getSchedule();
+			if(newJob.hasDependences()){
+				if(newJob.getStart() > schedule.getListMax(id)){
+					int diff = newJob.getStart() - schedule.getListMax(id);
+					newJob.addProccessTime(diff);
+				}
+			}			
+			schedule.addJob(id, newJob);
+			lowerBound = schedule.getMaxLength();
 	}
-
-	
 
 	@Override
 	public double cost() {
@@ -33,8 +39,8 @@ public class LowerBoundSimpleConstraints implements LowerBound{
 	}
 
 	@Override
-	public LowerBound make(Schedule parent, Job newJob, int id, boolean constraints) {
-		return new LowerBoundSimpleConstraints(parent, newJob, id, constraints);
+	public LowerBoundList make(ScheduleListTasks parent, Job newJob, int id) {
+		return new LowerBoundSimpleConstraints(parent, newJob, id);
 	}
 
 }

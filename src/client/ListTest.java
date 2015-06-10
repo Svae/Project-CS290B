@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import tasks.ScheduleListTasks;
 import tasks.ScheduleLptTasks;
 import tasks.SharedSchedule;
 import util.Job;
@@ -16,31 +17,28 @@ import api.JobRunner;
 public class ListTest {
 	
 	
-	
+	static List<Job> jobs;
 	
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
-		List<Job> jobs = new ArrayList<Job>();
-		int m = 2;
-		Schedule schedule = new Schedule(2);
-		int r = 0;
-		int j = 10;
-		System.out.println("Number of jobs: " + j);
-		System.out.println("Number of computers: " + m);
-		for (int i = 1; i < j; i++) {
-			//r = g.nextInt(20) + 1;
-			jobs.add(new Job(i,i));
-		}
+		jobs = new ArrayList<Job>();
+		generateSchedule();
+		int m = 3;
+		new JobRunner<Schedule>("Bla", args).run(new ScheduleListTasks(m, jobs), new SharedSchedule(null, Integer.MAX_VALUE));
+	}
+	
+	private static void generateSchedule(){
+		List<Integer> dep = new ArrayList<Integer>();
+		dep.add(1);
+		List<Integer> dep1 = new ArrayList<Integer>();
+		dep1.add(3);
+		dep1.add(4);
+
 		
-		//
-		
-		new JobRunner<Schedule>("Bla", args).run(new ScheduleLptTasks(m, jobs), makeLpt(schedule, jobs));
+		jobs.add(new Job(1, 3));
+		jobs.add(new Job(2, 2));
+		jobs.add(new Job(3, 2, dep));
+		jobs.add(new Job(4, 2));
+		jobs.add(new Job(5, 2, dep1));
 	}
 
-	private static SharedSchedule makeLpt(Schedule schedule, List<Job> jobs) {
-		for(Job job: jobs){
-			schedule.addJob(job);
-		}
-		System.out.println("UB" + schedule.getMaxLength());
-		return new SharedSchedule(schedule, schedule.getMaxLength());
-	}
 }

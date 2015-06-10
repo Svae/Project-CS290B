@@ -128,6 +128,7 @@ public class JobRunner<T> extends JFrame
     	prettyprint(schedule.schedule());
     	Logger.getLogger( this.getClass().getCanonicalName() )
         .log( Level.INFO, "Job run time: {0} ms.", ( System.nanoTime() - startTime ) / 1000000 ); 
+    	System.exit(0);
     	
     }
     

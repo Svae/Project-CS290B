@@ -141,7 +141,7 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 				else if(max.getStop() < temp.getStop()) max = temp;
 			} else return null;
 		}
-		return temp;
+		return max;
 	}
 	
 }

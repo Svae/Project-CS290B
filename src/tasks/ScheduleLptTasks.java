@@ -104,6 +104,8 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 			// Add priority
 			if(child.lowerBound().cost() < cost){
 				children.add(child);
+			} else {
+				if(!isAtomic()) System.out.println("Prune");
 			}
 		}
 		return children;

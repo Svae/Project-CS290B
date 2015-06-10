@@ -33,7 +33,7 @@ public class LowerBoundLpt implements LowerBound{
 		}
 		
 		if(remaining<diff) lowerBound = max;
-		else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers();
+		else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers(); 
 		
 	}
 

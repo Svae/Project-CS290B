@@ -2,7 +2,7 @@ package util;
 
 import java.util.List;
 
-public class Job {
+public class Job implements Comparable<Job>{
 
 	private int id;
 	private int time;
@@ -67,6 +67,12 @@ public class Job {
 	
 	public void addProccessTime(int extra){
 		time +=extra;
+	}
+
+	@Override
+	public int compareTo(Job o) {
+		int compareTime = o.getTime();
+		return compareTime-this.getTime();
 	}
 	
 }

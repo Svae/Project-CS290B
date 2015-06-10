@@ -30,15 +30,33 @@ public class ListTest {
 		List<Integer> dep = new ArrayList<Integer>();
 		dep.add(1);
 		List<Integer> dep1 = new ArrayList<Integer>();
-		dep1.add(3);
 		dep1.add(4);
+		
+		List<Integer> dep2 = new ArrayList<Integer>();
+		dep2.add(1);
+		dep2.add(4);
+
+
 
 		
-		jobs.add(new Job(1, 3));
-		jobs.add(new Job(2, 2));
-		jobs.add(new Job(3, 2, dep));
-		jobs.add(new Job(4, 2));
-		jobs.add(new Job(5, 2, dep1));
+		jobs.add(new Job(1, 1));
+		jobs.add(new Job(2, 6));
+		jobs.add(new Job(6, 8));
+		//1
+		jobs.add(new Job(3, 10, dep));
+		jobs.add(new Job(4, 1));
+		jobs.add(new Job(5, 4, dep1));
+		/*
+		jobs.add(new Job(1,5));
+		jobs.add(new Job(2,3));
+		jobs.add(new Job(3,4));
+		jobs.add(new Job(4,3));
+		jobs.add(new Job(5,5, dep1));
+		jobs.add(new Job(6,5, dep1));
+		jobs.add(new Job(7,3, dep1));
+		jobs.add(new Job(8,3, dep1));
+		jobs.add(new Job(9,8, dep));*/
+
 	}
 
 }

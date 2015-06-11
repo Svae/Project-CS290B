@@ -4,14 +4,7 @@
     <property name="build" location="build"/>
     <property name="dist" location="dist"/>
 
-    <path id="classpath.base">
-    </path>
-    <path id="classpath.test">
-        <pathelement location="/Projects/Java/Lib/junit.jar" />
-        <pathelement location="${tst-dir}" />
-        <path refid="classpath.base" />
-    </path>
-
+    
     <target name="compile" description="compile the source">
         <!--
          Create the build directory structure used by compile 
@@ -19,27 +12,6 @@
         <mkdir dir="${build}"/>
         <!--  Compile the java code from ${src} into ${build}  -->
         <javac srcdir="${src}" destdir="${build}"/>
-    </target>
-
-    <target name="compileTest" description="compile the tests for the source">
-        <javac srcdir="${tst-dir}"
-           verbose="${TALK}"
-           >
-          <classpath refid="classpath.test"/>
-        </javac>
-    </target>
-    <target name="clean-compile-test">
-        <delete verbose="${TALK}">
-            <fileset dir="${tst-dir}" includes="**/*.class" />
-        </delete>
-    </target>
-
-    <target name="test" depends="dist">
-      <junit>
-          <classpath refid="classpath.test" />
-          <formatter type="brief" usefile="false" />
-          <test name="TestExample" />
-      </junit>
     </target>
 
 
@@ -53,9 +25,15 @@
             </manifest>
         </jar>
         <!--  Make client jar file  -->
-        <jar destfile="${dist}/LptTest.jar" basedir="${build}">
+        <jar destfile="${dist}/ClientSchedule.jar" basedir="${build}">
             <manifest>
-                <attribute name="Main-Class" value="client.LptTest"/>
+                <attribute name="Main-Class" value="client.ClientSchedule"/>
+            </manifest>
+        </jar>
+        
+        <jar destfile="${dist}/ClientScheduleConstraints.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="client.ClientScheduleConstraints"/>
             </manifest>
         </jar>
     
@@ -82,13 +60,20 @@
         </java>
     </target>
 
-    <target name="runLpt" description="run client Lpt">
-        <java jar="${dist}/LptTest.jar" fork="true">
+    <target name="runScheduling" description="run client Lpt">
+        <java jar="${dist}/ClientSchedule.jar" fork="true">
             <arg value="${domain}"/>
             <jvmarg value="-Djava.security.policy=policy"/>
         </java>
     </target>
 
+    
+    <target name="runSchedulingConstraints" description="run client Lpt">
+        <java jar="${dist}/ClientScheduleConstraints.jar" fork="true">
+            <arg value="${domain}"/>
+            <jvmarg value="-Djava.security.policy=policy"/>
+        </java>
+    </target>
     
 
     <target name="clean" description="clean up">

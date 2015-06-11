@@ -25,7 +25,6 @@ public class LowerBoundConstraints implements LowerBoundList, Serializable{
 			if(newJob.hasDependences()){
 				if(newJob.getStart() > schedule.getListMax(id)){
 					int diff = newJob.getStart() - schedule.getListMax(id);
-					//TODO: Add blank job
 					schedule.addJob(id, new Job(0,diff));
 //					newJob.addProccessTime(diff);
 				}

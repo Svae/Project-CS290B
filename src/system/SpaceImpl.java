@@ -292,7 +292,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
                 while ( true )
                 {
                     Task task = null;
-                    System.out.println("Wait: " + waitingTaskMap.size());
                     try 
                     { 
                         task = readyTaskQ.takeLast();

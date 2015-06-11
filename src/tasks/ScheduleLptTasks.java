@@ -19,7 +19,7 @@ import api.TaskRecursive;
 public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	
 	
-	private static final int JOBFACTOR = 30;
+	private static final int JOBFACTOR = 10;
 	private List<Job> jobs;
 	private int computers;
 	private Schedule schedule;

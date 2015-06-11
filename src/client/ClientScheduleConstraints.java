@@ -16,7 +16,7 @@ import util.Schedule;
 import util.UpperBound;
 import api.JobRunner;
 
-public class ListTest {
+public class ClientScheduleConstraints {
 	
 	
 	static List<Job> jobs;
@@ -26,7 +26,6 @@ public class ListTest {
 		generateSchedule();
 		int m = 3;
 		Schedule schedule = new Schedule(m);
-		
 		SharedSchedule s = UpperBound.makeListBound(schedule, jobs);
 		schedule = new Schedule(m);
 		System.out.println("Upperbound: " + s.cost());
@@ -49,9 +48,6 @@ public class ListTest {
 		dep2.add(4);
 		dep2.add(7);
 
-
-
-		/*
 		jobs.add(new Job(1, 1));
 		jobs.add(new Job(2, 1));
 		jobs.add(new Job(6, 8));
@@ -66,17 +62,6 @@ public class ListTest {
 		jobs.add(new Job(8, 8, dep2));
 		//3,4,7
 		jobs.add(new Job(9, 8, dep2));
-		*/
-		
-		jobs.add(new Job(1,5));
-		jobs.add(new Job(2,3));
-		jobs.add(new Job(3,4));
-		jobs.add(new Job(4,3));
-		jobs.add(new Job(5,5, dep1));
-		jobs.add(new Job(6,5, dep1));
-		jobs.add(new Job(7,3, dep1));
-		jobs.add(new Job(8,3, dep1));
-		jobs.add(new Job(9,8, dep));
 
 	}
 

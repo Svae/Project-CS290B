@@ -54,7 +54,7 @@ import static system.Configuration.SPACE_CALLABLE;
  */
 public final class SpaceImpl extends UnicastRemoteObject implements Space
 {
-    static final public int PROXIES_PER_PROCESSOR = 1;
+    static final public int PROXIES_PER_PROCESSOR = 2;
     static final public int FINAL_RETURN_VALUE = -1;
     static final private AtomicInteger computerIds = new AtomicInteger();
     
@@ -292,6 +292,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
                 while ( true )
                 {
                     Task task = null;
+                    System.out.println("Wait: " + waitingTaskMap.size());
                     try 
                     { 
                         task = readyTaskQ.takeLast();

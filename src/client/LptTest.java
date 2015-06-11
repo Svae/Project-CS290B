@@ -35,7 +35,7 @@ public class LptTest {
 		Schedule schedule;
 			k = 0;
 			schedule = new Schedule(m);
-			for (int i = 1; i <=18; i++) {
+			for (int i = 1; i <=25; i++) {
 				r = g.nextInt(20) + 1;
 				jobs.add(new Job(i,r));
 				k += r;

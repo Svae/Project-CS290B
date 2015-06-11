@@ -81,8 +81,8 @@ public class JobRunner<T> extends JFrame
         }
         else
         { 
-            final String url = "rmi:"                            
-            				 + args[ 0 ] 
+            final String url = "rmi://"                            
+            				 + args[ 0 ] 				
                              + ":" 
                              + Space.PORT 
                              + "/" 

@@ -74,7 +74,6 @@ public final class ComputerImpl extends UnicastRemoteObject implements Computer
     {
         System.setSecurityManager( new SecurityManager() );
         final String domainName = args.length == 0 ? "localhost" : args[ 0 ];
-//        final String domainName = "192.168.0.18";
         final String url = "rmi://" + domainName + ":" + Space.PORT + "/" + Space.SERVICE_NAME;
         final Space space = (Space) Naming.lookup( url );
         space.register( new ComputerImpl( space ), Runtime.getRuntime().availableProcessors() );

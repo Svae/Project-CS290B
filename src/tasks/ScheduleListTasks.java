@@ -87,7 +87,6 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
                 } 
             }  
         }
-//        System.out.println("Solve cost: " + shortestScheduleCost);
         
 		shared( new SharedSchedule(shortestSchedule, shortestSchedule.getMaxLength()));
 		return new ReturnValueSchedule(this, new ResultSchedule(shortestSchedule, shortestSchedule.getMaxLength()));

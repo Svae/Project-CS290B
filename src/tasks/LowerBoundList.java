@@ -26,7 +26,7 @@ package tasks;
 import util.Job;
 
 /**
- *
+ * 
  * @author Peter Cappello
  */
 public interface LowerBoundList 
@@ -35,5 +35,4 @@ public interface LowerBoundList
 
 	LowerBoundList make(ScheduleListTasks parent, Job newJob, int id);
     
-    //LowerBound make( Schedule parent, Job newJob, int id);    
 }

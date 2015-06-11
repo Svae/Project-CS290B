@@ -1,0 +1,101 @@
+<project name="Project-CS290B" default="dist" basedir=".">  
+
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="dist"/>
+
+    <path id="classpath.base">
+    </path>
+    <path id="classpath.test">
+        <pathelement location="/Projects/Java/Lib/junit.jar" />
+        <pathelement location="${tst-dir}" />
+        <path refid="classpath.base" />
+    </path>
+
+    <target name="compile" description="compile the source">
+        <!--
+         Create the build directory structure used by compile 
+        -->
+        <mkdir dir="${build}"/>
+        <!--  Compile the java code from ${src} into ${build}  -->
+        <javac srcdir="${src}" destdir="${build}"/>
+    </target>
+
+    <target name="compileTest" description="compile the tests for the source">
+        <javac srcdir="${tst-dir}"
+           verbose="${TALK}"
+           >
+          <classpath refid="classpath.test"/>
+        </javac>
+    </target>
+    <target name="clean-compile-test">
+        <delete verbose="${TALK}">
+            <fileset dir="${tst-dir}" includes="**/*.class" />
+        </delete>
+    </target>
+
+    <target name="test" depends="dist">
+      <junit>
+          <classpath refid="classpath.test" />
+          <formatter type="brief" usefile="false" />
+          <test name="TestExample" />
+      </junit>
+    </target>
+
+
+    <target name="dist" depends="compile" description="generate the distribution">
+      <!--  Create the distribution directory  -->
+        <mkdir dir="${dist}"/>
+        <!--  Make computer jar file  -->
+        <jar destfile="${dist}/Computer.jar" basedir="${build}" >
+            <manifest>
+                <attribute name="Main-Class" value="system.ComputerImpl"/>
+            </manifest>
+        </jar>
+        <!--  Make client jar file  -->
+        <jar destfile="${dist}/LptTest.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="client.LptTest"/>
+            </manifest>
+        </jar>
+    
+        <jar destfile="${dist}/Space.jar" basedir="${build}" >
+            <manifest>
+                <attribute name="Main-Class" value="system.SpaceImpl"/> 
+            </manifest>
+        </jar>
+    
+    <!--  Copy client's task classes to client's codebase  -->
+    </target>
+
+
+    <target name="runSpace"  description="run space">
+        <java jar="${dist}/Space.jar" fork="true">
+            <jvmarg value="-Djava.security.policy=policy"/>
+        </java>
+    </target>
+  
+    <target name="runComputer"  description="run computer">
+        <java jar="${dist}/Computer.jar" fork="true">
+            <arg value="${domain}"/>
+            <jvmarg value="-Djava.security.policy=policy"/>
+        </java>
+    </target>
+
+    <target name="runLpt" description="run client Lpt">
+        <java jar="${dist}/LptTest.jar" fork="true">
+            <arg value="${domain}"/>
+            <jvmarg value="-Djava.security.policy=policy"/>
+        </java>
+    </target>
+
+    
+
+    <target name="clean" description="clean up">
+    <!--  Delete the ${build} and ${dist} directory trees  -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target> 
+
+
+</project>

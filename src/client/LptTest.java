@@ -32,8 +32,7 @@ public class LptTest {
 //		System.out.println("Number of jobs: " + (j - 1));
 		System.out.println("Number of computers: " + m);
 		SharedSchedule s;
-		Schedule schedule = new Schedule(m);
-		while(true){
+		Schedule schedule;
 			k = 0;
 			schedule = new Schedule(m);
 			for (int i = 1; i <=18; i++) {
@@ -42,8 +41,7 @@ public class LptTest {
 				k += r;
 			}
 			s = UpperBound.makeLPTBound(schedule, jobs, m);
-			if(s.cost() != k/(double)m) break;
-		}
+
 		
 //		jobs.add(new Job(1,4));
 //		jobs.add(new Job(2,4));
@@ -56,7 +54,10 @@ public class LptTest {
 		System.out.println("Upperbound: " + s.cost());
 
 		System.out.println("Lowerbound: " + (k/(double)m));
-		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleLptTasks(m, jobs), s);
+		JobRunner<ResultSchedule> jr = new JobRunner<ResultSchedule>(args);
+		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), s);
+		System.out.println(result);
+		result = jr.run(new ScheduleLptTasks(m, jobs), s);
 		System.out.println(result);
 	}
 

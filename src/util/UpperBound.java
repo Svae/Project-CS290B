@@ -25,14 +25,25 @@ public class UpperBound {
 		return new SharedSchedule(null, Integer.MAX_VALUE);
 	}
 	
-	public static SharedSchedule makeListBound(Schedule schedule, List<Job> jobs, int m){
+	public static SharedSchedule makeListBound(Schedule schedule, List<Job> jobs){
+		
 		List<Job> joblist = new ArrayList<Job>(jobs);
-		Job temp = null;
-		while(!joblist.isEmpty()){
-			temp = ScheduleUtil.findAvailableJob(jobs, schedule);
-			jobs.remove(temp);
-			schedule.addJob(temp);
+		Job newJob = null;
+		int minId;
+		while(joblist.size() >0){
+			newJob = ScheduleUtil.findAvailableJob(joblist, schedule);
+			minId = schedule.firstDone();
+			if(newJob.hasDependences()){
+				if(newJob.getStart() > schedule.getListMax(minId)){
+					int diff = newJob.getStart() - schedule.getListMax(minId);
+					schedule.addJob(minId, new Job(0,diff));
+
+				}
+			}
+			joblist.remove(newJob);
+			schedule.addJob(minId, newJob);
 		}
 		return new SharedSchedule(schedule, schedule.getMaxLength());
 	}
+	
 }

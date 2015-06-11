@@ -11,11 +11,4 @@ public class ReturnValueSchedule extends ReturnValue<ResultSchedule> {
 	public ReturnValueSchedule(Task task, ResultSchedule value) {
 		super(task, value);
 	}
-
-	@Override
-	public JLabel view() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

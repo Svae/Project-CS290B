@@ -13,6 +13,7 @@ import tasks.ScheduleLptTasks;
 import tasks.SharedSchedule;
 import util.Job;
 import util.Schedule;
+import util.UpperBound;
 import api.JobRunner;
 
 public class ListTest {
@@ -23,8 +24,13 @@ public class ListTest {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		jobs = new ArrayList<Job>();
 		generateSchedule();
-		int m = 5;
-		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleListTasks(m, jobs), new SharedSchedule(null, Integer.MAX_VALUE));
+		int m = 3;
+		Schedule schedule = new Schedule(m);
+		
+		SharedSchedule s = UpperBound.makeListBound(schedule, jobs);
+		schedule = new Schedule(m);
+		System.out.println("Upperbound: " + s.cost());
+		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleListTasks(m, jobs), s);
 		System.out.println(result.toString());
 	}
 	
@@ -37,7 +43,6 @@ public class ListTest {
 		dep1.add(1);
 		dep1.add(2);
 		dep1.add(4);
-		dep1.add(7);
 		
 		List<Integer> dep2 = new ArrayList<Integer>();
 		dep2.add(3);
@@ -46,7 +51,7 @@ public class ListTest {
 
 
 
-		
+		/*
 		jobs.add(new Job(1, 1));
 		jobs.add(new Job(2, 1));
 		jobs.add(new Job(6, 8));
@@ -58,10 +63,11 @@ public class ListTest {
 		jobs.add(new Job(5, 1, dep1));
 		
 		jobs.add(new Job(7, 1, dep));
-		jobs.add(new Job(8, 1, dep1));
+		jobs.add(new Job(8, 8, dep2));
 		//3,4,7
 		jobs.add(new Job(9, 8, dep2));
-		/*
+		*/
+		
 		jobs.add(new Job(1,5));
 		jobs.add(new Job(2,3));
 		jobs.add(new Job(3,4));
@@ -70,7 +76,7 @@ public class ListTest {
 		jobs.add(new Job(6,5, dep1));
 		jobs.add(new Job(7,3, dep1));
 		jobs.add(new Job(8,3, dep1));
-		jobs.add(new Job(9,8, dep));*/
+		jobs.add(new Job(9,8, dep));
 
 	}
 

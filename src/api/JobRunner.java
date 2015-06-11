@@ -93,7 +93,7 @@ public class JobRunner<T> extends JFrame
     
     /**
      * Run the Job: Generate the tasks, retrieve the results, compose a solution
-     * to the original problem, and display the solution.
+     * to the original problem.
      * @param task the task that defines the job.
      * @param shared
      * @return the value of the computation

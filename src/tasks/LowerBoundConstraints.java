@@ -26,19 +26,20 @@ public class LowerBoundConstraints implements LowerBoundList, Serializable{
 				if(newJob.getStart() > schedule.getListMax(id)){
 					int diff = newJob.getStart() - schedule.getListMax(id);
 					//TODO: Add blank job
-					newJob.addProccessTime(diff);
+					schedule.addJob(id, new Job(0,diff));
+//					newJob.addProccessTime(diff);
 				}
 			}	
-			List<Job> jobs = parent.getJobs();
 			schedule.addJob(id, newJob);
+			
+			
+			List<Job> jobs = parent.getJobs();
 			int max = schedule.getMaxLength();
 			int remaining = getRemainingJobLength(jobs);
-			List<Integer> schedules = schedule.getAllJobLengths();
 			int diff = getDifference(schedule, max);
 			
 			if(remaining<diff) lowerBound = max;
 			else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers();
-			lowerBound = schedule.getMaxLength();
 	}
 
 	private int getDifference(Schedule schedule, int max) {

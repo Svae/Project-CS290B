@@ -36,5 +36,4 @@ public interface LowerBound
 
 	LowerBound make(ScheduleLptTasks parent, Job newJob, int id);
     
-    //LowerBound make( Schedule parent, Job newJob, int id);    
 }

@@ -12,7 +12,6 @@ public class LowerBoundZero implements LowerBound {
 
 	@Override
 	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
-		// TODO Auto-generated method stub
 		return new LowerBoundZero();
 	}
 	

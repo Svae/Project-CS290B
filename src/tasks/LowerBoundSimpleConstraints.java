@@ -25,7 +25,8 @@ public class LowerBoundSimpleConstraints implements LowerBoundList{
 			if(newJob.hasDependences()){
 				if(newJob.getStart() > schedule.getListMax(id)){
 					int diff = newJob.getStart() - schedule.getListMax(id);
-					newJob.addProccessTime(diff);
+					schedule.addJob(id, new Job(0,diff));
+//					newJob.addProccessTime(diff);
 				}
 			}			
 			schedule.addJob(id, newJob);

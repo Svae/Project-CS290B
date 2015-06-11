@@ -83,5 +83,4 @@ abstract public class ReturnValue<T> extends Return
         taskCompose.maxChildTInf( tInf() );
     }
     
-    abstract public JLabel view();
 }

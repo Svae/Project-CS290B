@@ -54,15 +54,8 @@ public class Schedule implements Serializable{
 	}
 	
 	public void addJob(Job job){
-		int minLength = Integer.MAX_VALUE;
-		int minId = -1;
-		for (Map.Entry<Integer, JobList> entry : schedule.entrySet()) {
-			if(entry.getValue().getMaxLength() < minLength){
-				minLength = entry.getValue().getMaxLength();
-				minId = entry.getKey();
-			}
-		}
-		addJob(minId, job);	
+		
+		addJob(firstDone(), job);	
 	}
 	
 	public int getMaxLength(){
@@ -99,6 +92,18 @@ public class Schedule implements Serializable{
 			}
 		}
 		return null;
+	}
+	
+	public Integer firstDone(){
+		int minLength = Integer.MAX_VALUE;
+		int minId = -1;
+		for (Map.Entry<Integer, JobList> entry : schedule.entrySet()) {
+			if(entry.getValue().getMaxLength() < minLength){
+				minLength = entry.getValue().getMaxLength();
+				minId = entry.getKey();
+			}
+		}
+		return minId;
 	}
 	
 	@Override

@@ -72,11 +72,12 @@ public class JobRunner<T> extends JFrame
         System.setSecurityManager( new SecurityManager() );
         setTitle( title );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        if ( args.length == 0 )
+        // TODO: Maa endres
+        if ( true )
         {
             space = new SpaceImpl();
-            /*int numComputers = Configuration.MULTI_COMPUTERS 
-                             ? Runtime.getRuntime().availableProcessors() : 1;*/
+//            int numComputers = Configuration.MULTI_COMPUTERS 
+//                             ? Runtime.getRuntime().availableProcessors() : 1;
             int numComputers = 1;
             for ( int i = 0; i < numComputers; i++ )
             {
@@ -84,9 +85,9 @@ public class JobRunner<T> extends JFrame
             }
         }
         else
-        {
-            final String url = "rmi://" 
-                             + args[ 0 ] 
+        { 
+            final String url = "rmi:"                            
+            				+ args[ 0 ] 
                              + ":" 
                              + Space.PORT 
                              + "/" 
@@ -118,34 +119,23 @@ public class JobRunner<T> extends JFrame
      * @throws RemoteException occurs if there is a communication problem or
      * the remote service is not responding
      */
-    public void run( final Task task, Shared shared ) throws RemoteException
+    public T run( final Task task, Shared shared ) throws RemoteException
     {
         /*view( space.compute( task, shared ).view() );*/
         
     	
-    	ReturnValue value = space.compute(task, shared);
-    	ResultSchedule schedule = (ResultSchedule)value.value();
-    	prettyprint(schedule.schedule());
+//    	ReturnValue value = space.compute(task, shared);
+//    	ResultSchedule schedule = (ResultSchedule)value.value();
+//    	prettyprint(schedule.schedule());
     	Logger.getLogger( this.getClass().getCanonicalName() )
         .log( Level.INFO, "Job run time: {0} ms.", ( System.nanoTime() - startTime ) / 1000000 ); 
-    	System.exit(0);
+		return (T) space.compute(task, shared).value();
     	
     }
     
     
     
-    private void prettyprint(Schedule schedule) {
-    	HashMap<Integer, JobList> l = schedule.getSchedule();
-    	String s;
-		for (Map.Entry<Integer, JobList> entry : l.entrySet()) {
-			s = "";
-			s += entry.getKey() + ": ";
-			s += entry.getValue().prettyprint();
-			System.out.println(s);
-		}
-		System.out.println("-------------------------");
-		
-	}
+    
 
 	private void view( final JLabel jLabel )
     {

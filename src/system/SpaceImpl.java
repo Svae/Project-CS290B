@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -59,6 +60,8 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     final private AtomicInteger taskIds = new AtomicInteger();
     
     final private BlockingQueue<Task>   readyTaskQ = new LinkedBlockingQueue<>();
+//    final private BlockingDeque<Task>   readyTaskQ = new LinkedBlockingDeque<>();
+
     final private BlockingQueue<ReturnValue> resultQ = new LinkedBlockingQueue<>();
     final private Map<Computer, ComputerProxy> computerProxies = Collections.synchronizedMap(new HashMap<Computer,ComputerProxy>());
     final private Map<UUID, TaskCompose>        waitingTaskMap = Collections.synchronizedMap( new HashMap<UUID, TaskCompose>() );
@@ -288,6 +291,7 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
                 while ( true )
                 {
                     Task task = null;
+//                    System.out.println("Waiting: " + waitingTaskMap.size());
                     try 
                     { 
                         task = readyTaskQ.take();

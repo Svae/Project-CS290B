@@ -7,16 +7,11 @@ import util.Schedule;
 
 public class LowerBoundSimple implements LowerBound{
 
-	private double lowerBound;
-	
+	private double lowerBound; 
 	
 	public LowerBoundSimple(int computers, List<Job> jobs) {
-		int jobLength = 0;
-		for (Job job : jobs) {
-			jobLength += job.getTime();
-		}
+		int jobLength = getRemainingJobLength(jobs);
 		lowerBound = ((double)jobLength)/computers;
-		System.out.println("Lower bound: " + lowerBound);
 	}
 	
 	public LowerBoundSimple(ScheduleLptTasks parent, Job newJob, int id) {
@@ -27,13 +22,24 @@ public class LowerBoundSimple implements LowerBound{
 
 
 	@Override
-	public double cost() {
-		return lowerBound;
+	public LowerBoundSimple make(ScheduleLptTasks parent, Job newJob, int id) {
+		return new LowerBoundSimple(parent, newJob, id);
 	}
 
 	@Override
-	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
-		return new LowerBoundSimple(parent, newJob, id);
+	public double cost() {
+		// TODO Auto-generated method stub
+		return lowerBound;
 	}
+	
+	
+	private int getRemainingJobLength(List<Job> jobs) {
+		int jobLength = 0;
+		for (Job job : jobs) {
+			jobLength += job.getTime();
+		}
+		return jobLength;
+	}
+	
 
 }

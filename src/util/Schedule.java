@@ -101,4 +101,13 @@ public class Schedule implements Serializable{
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+    	StringBuilder sb = new StringBuilder();
+		for (Map.Entry<Integer, JobList> entry : this.schedule.entrySet()) {
+			sb.append(entry.getKey() + ": " + entry.getValue().prettyprint()+ "\n");
+		}
+		sb.append("-------------------------");
+		return sb.toString();
+	}
 }

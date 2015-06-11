@@ -1,8 +1,9 @@
 package util;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Job implements Comparable<Job>{
+public class Job implements Serializable,Comparable<Job>{
 
 	private int id;
 	private int time;

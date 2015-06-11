@@ -2,7 +2,6 @@ package tasks;
 
 import java.util.List;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import util.Job;
 import util.Schedule;

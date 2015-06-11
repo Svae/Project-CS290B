@@ -1,9 +1,10 @@
 package util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobList {
+public class JobList implements Serializable{
 
 	private List<Job> jobs;
 	private int maxLength;

@@ -1,13 +1,13 @@
 package tasks;
 
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 import util.Job;
 import util.Schedule;
 
-public class LowerBoundLpt implements LowerBound{
+public class LowerBoundLpt implements LowerBound, Serializable{
 
 	private double lowerBound;
 	

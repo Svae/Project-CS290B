@@ -28,7 +28,7 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 		this.computers = computers;
 		this.jobs = jobs;
 		schedule = new Schedule(computers);
-		lowerBound = new LowerBoundSimpleConstraints(computers, jobs);
+		lowerBound = new LowerBoundConstraints(computers, jobs);
 	}
 	
 	
@@ -44,8 +44,7 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 		}
 		this.schedule = new Schedule(computers, copy , parent.getSchedule().getMaxLength());
 		Job  temp = findAvailableJobs();
-		lowerBound = new LowerBoundSimpleConstraints(this, temp, id);
-
+		lowerBound = parent.lowerBound().make(this, temp, id);
 	}
 
 
@@ -142,6 +141,18 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 			} else return null;
 		}
 		return max;
+	}
+
+
+
+	public List<Job> getJobs() {
+		return jobs;
+	}
+
+
+
+	public double getNumberOfComputers() {
+		return computers;
 	}
 	
 }

@@ -30,7 +30,7 @@ import util.Schedule;
  *
  * @author Peter Cappello
  */
-public interface LowerBound 
+public interface LowerBound
 {
     double cost();
 

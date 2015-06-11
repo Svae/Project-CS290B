@@ -24,10 +24,10 @@ public class ClientSchedule {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		List<Job> jobs = new ArrayList<Job>();
 		Random g = new Random();
-		int m = g.nextInt(2) + 2;
-		//int m = 3;
+		//int m = g.nextInt(2) + 2;
+		int m = 3;
 		int r;
-		int j = 15;
+		int j = 14;
 		int k = 0;
 		System.out.println("Number of jobs: " + j);
 		System.out.println("Number of computers: " + m);

@@ -45,13 +45,18 @@ public class JobList implements Serializable{
 	public boolean hasConstraints(){
 		return constraints;
 	}
-	public String prettyprint(){
-		String s = "";
-		for (Job job : jobs) {
-			s += "(" + job.getId() + "," + job.getTime()+"), ";
-		}
-		s += ": " + maxLength;
-		return s;
+	
+	@Override
+	public String toString(){
+		if(!jobs.isEmpty()){
+			StringBuilder sb = new StringBuilder();
+			for (Job job : jobs) {
+				sb.append("(" + job.getId() + "," + job.getTime()+"),");
+			}
+			sb.setLength(sb.length()-1);
+			sb.append(" : " + maxLength);
+			return sb.toString();
+		}else return " : 0";
 	}
 	
 	public Job containsJob(int id){

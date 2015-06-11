@@ -55,7 +55,6 @@ import util.Schedule;
 public class JobRunner<T> extends JFrame
 {
     final private Space  space;
-    final private long   startTime = System.nanoTime();
     
     /**
      *
@@ -66,19 +65,15 @@ public class JobRunner<T> extends JFrame
      * @throws NotBoundException There is no Space service bound in the RMI registry.
      * @throws MalformedURLException the URL provided for the Space RMI registry is malformed.
      */
-    public JobRunner( String title, String[] args ) 
+    public JobRunner(String[] args ) 
            throws RemoteException, NotBoundException, MalformedURLException
     { 
         System.setSecurityManager( new SecurityManager() );
-        setTitle( title );
-        setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        // TODO: Maa endres
-        if ( true )
+        if ( args.length == 0 )
         {
             space = new SpaceImpl();
-//            int numComputers = Configuration.MULTI_COMPUTERS 
-//                             ? Runtime.getRuntime().availableProcessors() : 1;
-            int numComputers = 1;
+            int numComputers = Configuration.MULTI_COMPUTERS 
+                             ? Runtime.getRuntime().availableProcessors() : 1;
             for ( int i = 0; i < numComputers; i++ )
             {
                 space.register( new ComputerImpl( space ), SpaceImpl.PROXIES_PER_PROCESSOR * numComputers );
@@ -87,7 +82,7 @@ public class JobRunner<T> extends JFrame
         else
         { 
             final String url = "rmi:"                            
-            				+ args[ 0 ] 
+            				 + args[ 0 ] 
                              + ":" 
                              + Space.PORT 
                              + "/" 
@@ -100,51 +95,20 @@ public class JobRunner<T> extends JFrame
      * Run the Job: Generate the tasks, retrieve the results, compose a solution
      * to the original problem, and display the solution.
      * @param task the task that defines the job.
-     * @throws RemoteException occurs if there is a communication problem or
-     * the remote service is not responding
-     */
-    public void run( final Task task ) throws RemoteException
-    {
-        ReturnValue<T> returnValue = space.compute( task );
-        view( returnValue.view() );
-        Logger.getLogger( this.getClass().getCanonicalName() )
-              .log( Level.INFO, "Job run time: {0} ms.", ( System.nanoTime() - startTime ) / 1000000 );
-    }
-    
-    /**
-     * Run the Job: Generate the tasks, retrieve the results, compose a solution
-     * to the original problem, and display the solution.
-     * @param task the task that defines the job.
      * @param shared
+     * @return the value of the computation
      * @throws RemoteException occurs if there is a communication problem or
      * the remote service is not responding
      */
     public T run( final Task task, Shared shared ) throws RemoteException
     {
-        /*view( space.compute( task, shared ).view() );*/
-        
-    	
-//    	ReturnValue value = space.compute(task, shared);
-//    	ResultSchedule schedule = (ResultSchedule)value.value();
-//    	prettyprint(schedule.schedule());
+    	long   startTime = System.nanoTime();
+    	T result = (T) space.compute(task, shared).value();
     	Logger.getLogger( this.getClass().getCanonicalName() )
         .log( Level.INFO, "Job run time: {0} ms.", ( System.nanoTime() - startTime ) / 1000000 ); 
-		return (T) space.compute(task, shared).value();
+		return result;
     	
     }
-    
-    
-    
-    
 
-	private void view( final JLabel jLabel )
-    {
-        final Container container = getContentPane();
-        container.setLayout( new BorderLayout() );
-        container.add( new JScrollPane( jLabel ), BorderLayout.CENTER );
-        pack();
-        setVisible( true );
-    }
-    
     
 }

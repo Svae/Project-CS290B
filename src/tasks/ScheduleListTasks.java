@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.Map.Entry;
 
+import system.Return;
 import util.Job;
 import util.JobList;
 import util.Schedule;
+import util.ScheduleUtil;
 import api.ReturnDecomposition;
 import api.ReturnValue;
 import api.TaskRecursive;
@@ -18,6 +20,7 @@ import api.TaskRecursive;
 public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	
 	
+	private static final int JOBFACTOR = 30;
 	private List<Job> jobs;
 	private int computers;
 	private Schedule schedule;
@@ -36,28 +39,29 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	public ScheduleListTasks(int computers, ScheduleListTasks parent, List<Job> jobs, int id) {
 		this.computers = computers;
 		this.jobs = jobs;
-
-
 		HashMap<Integer, JobList> copy = new HashMap<Integer, JobList>();
+		
 		for(Map.Entry<Integer,JobList> entry : parent.getSchedule().getSchedule().entrySet()){
 		    copy.put(entry.getKey(), new JobList(entry.getValue()));
 		}
+		
 		this.schedule = new Schedule(computers, copy , parent.getSchedule().getMaxLength());
-		Job  temp = findAvailableJobs();
-		lowerBound = parent.lowerBound().make(this, temp, id);
+		Job newJob = ScheduleUtil.findAvailableJob(jobs, schedule);
+		lowerBound = parent.lowerBound().make(this, newJob, id);
+		jobs.remove(newJob);
 	}
 
 
 	@Override
 	public boolean isAtomic() {
-		return jobs.size() <= 4;
+		return jobs.size() <= JOBFACTOR/computers;
 	}
 	
-	public LowerBoundList lowerBound(){ return lowerBound; };
+	public LowerBoundList lowerBound(){ return lowerBound; }
 	
-	public double cost() { return lowerBound().cost(); }
+	public double cost() { return lowerBound.cost(); }
 	
-	public Schedule getSchedule(){ return schedule; };
+	public Schedule getSchedule(){ return schedule; }
 
 	@Override
 	public ReturnValue<ResultSchedule> solve() {
@@ -82,13 +86,20 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
                     stack.push( child );
                 } 
             }  
-        } 
+        }
+//        System.out.println("Solve cost: " + shortestScheduleCost);
+        
 		shared( new SharedSchedule(shortestSchedule, shortestSchedule.getMaxLength()));
 		return new ReturnValueSchedule(this, new ResultSchedule(shortestSchedule, shortestSchedule.getMaxLength()));
 	}
 
 	@Override
-	public ReturnDecomposition divideAndConquer() {
+	public Return divideAndConquer() {
+		SharedSchedule localShared = (SharedSchedule) shared();
+		List<ScheduleListTasks> children = children(( localShared ).cost() );
+		if(children.size() == 0){
+			return new ReturnValueSchedule(this, new ResultSchedule(localShared.schedule(), localShared.cost()));
+		}
 		return new ReturnDecomposition(new CompareSchedules(), children(( (SharedSchedule) shared()).cost() ));
 	}
 
@@ -108,40 +119,6 @@ public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	}
 	
 	private boolean isComplete() { return jobs.isEmpty(); }
-
-
-	
-	
-	private Job findAvailableJobs() {
-		Job temp = null;
-		for(Job job : jobs){
-			if(job.hasDependences()){
-				temp = checkDependences(job);
-				if(temp != null){
-					job.setStart(temp.getStop());
-					jobs.remove(job);
-					return job;
-				}
-			} else {
-				jobs.remove(job);
-				return job;
-			}
-		}
-		return null;
-	}
-
-	private Job checkDependences(Job job){
-		Job temp = null;
-		Job max = null;
-		for(Integer id : job.getDependences()){
-			temp = schedule.containsJob(id);
-			if(temp != null){
-				if(max == null) max = temp;
-				else if(max.getStop() < temp.getStop()) max = temp;
-			} else return null;
-		}
-		return max;
-	}
 
 
 

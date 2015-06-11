@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.BlockingDeque;
@@ -59,8 +60,8 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     final private AtomicInteger taskIds = new AtomicInteger();
     
-    final private BlockingQueue<Task>   readyTaskQ = new LinkedBlockingQueue<>();
-//    final private BlockingDeque<Task>   readyTaskQ = new LinkedBlockingDeque<>();
+//    final private BlockingQueue<Task>   readyTaskQ = new LinkedBlockingQueue<>();
+    final private BlockingDeque<Task>   readyTaskQ = new LinkedBlockingDeque<>();
 
     final private BlockingQueue<ReturnValue> resultQ = new LinkedBlockingQueue<>();
     final private Map<Computer, ComputerProxy> computerProxies = Collections.synchronizedMap(new HashMap<Computer,ComputerProxy>());
@@ -291,10 +292,9 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
                 while ( true )
                 {
                     Task task = null;
-//                    System.out.println("Waiting: " + waitingTaskMap.size());
                     try 
                     { 
-                        task = readyTaskQ.take();
+                        task = readyTaskQ.takeLast();
                         processResult( task, computer.execute( task, shared ) );
                     }
                     catch ( RemoteException ignore )

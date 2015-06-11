@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import tasks.ResultSchedule;
 import tasks.ScheduleListTasks;
 import tasks.ScheduleLptTasks;
 import tasks.SharedSchedule;
@@ -22,13 +23,14 @@ public class ListTest {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		jobs = new ArrayList<Job>();
 		generateSchedule();
-		int m = 2;
-		new JobRunner<Schedule>("Bla", args).run(new ScheduleListTasks(m, jobs), new SharedSchedule(null, Integer.MAX_VALUE));
+		int m = 5;
+		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleListTasks(m, jobs), new SharedSchedule(null, Integer.MAX_VALUE));
+		System.out.println(result.toString());
 	}
 	
 	private static void generateSchedule(){
 		List<Integer> dep = new ArrayList<Integer>();
-		dep.add(1);
+		dep.add(3);
 		
 		
 		List<Integer> dep1 = new ArrayList<Integer>();
@@ -38,24 +40,26 @@ public class ListTest {
 		dep1.add(7);
 		
 		List<Integer> dep2 = new ArrayList<Integer>();
-		dep2.add(2);
+		dep2.add(3);
 		dep2.add(4);
 		dep2.add(7);
 
 
 
 		
-		jobs.add(new Job(1, 6));
-		jobs.add(new Job(2, 6));
+		jobs.add(new Job(1, 1));
+		jobs.add(new Job(2, 1));
 		jobs.add(new Job(6, 8));
 		//1
-		jobs.add(new Job(3, 10, dep));
-		jobs.add(new Job(4, 1, dep));
+		jobs.add(new Job(3, 10));
+		//3
+		jobs.add(new Job(4, 10, dep));
 		//4
-		jobs.add(new Job(5, 4, dep1));
+		jobs.add(new Job(5, 1, dep1));
 		
 		jobs.add(new Job(7, 1, dep));
-		jobs.add(new Job(8, 6, dep1));
+		jobs.add(new Job(8, 1, dep1));
+		//3,4,7
 		jobs.add(new Job(9, 8, dep2));
 		/*
 		jobs.add(new Job(1,5));

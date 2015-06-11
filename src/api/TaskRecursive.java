@@ -56,5 +56,5 @@ abstract public class TaskRecursive<T> extends Task
      *
      * @return the ReturnDecomposition object.
      */
-    abstract public ReturnDecomposition divideAndConquer();
+    abstract public Return divideAndConquer();
 }

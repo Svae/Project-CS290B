@@ -20,6 +20,7 @@ import util.Schedule;
 import api.JobRunner;
 
 public class LPTtest {
+	
 
 	@Test
 	public void test() throws RemoteException, MalformedURLException, NotBoundException {
@@ -43,8 +44,17 @@ public class LPTtest {
 		jobs.add(new Job(5,2));
 		jobs.add(new Job(3,2));
 		SharedSchedule s = makeLpt(schedule, jobs, m);
-		ResultSchedule result = new JobRunner<ResultSchedule>("Bla", null).run(new ScheduleLptTasks(m, jobs), s );
+		JobRunner<ResultSchedule> jr = new JobRunner<ResultSchedule>(new String[0]);
+		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), s );
 		assertEquals(result.cost(), 6);
+		result = jr.run(new ScheduleLptTasks(m, jobs), s );
+		assertEquals(result.cost(), 6);
+		result = jr.run(new ScheduleLptTasks(m, jobs), s );
+
+	}
+	@Test
+	public void test1(){
+		assertEquals(1, 1);
 	}
 	
 private static SharedSchedule makeLpt(Schedule schedule, List<Job> jobs, int m) {

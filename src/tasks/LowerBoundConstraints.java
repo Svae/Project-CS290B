@@ -25,6 +25,7 @@ public class LowerBoundConstraints implements LowerBoundList, Serializable{
 			if(newJob.hasDependences()){
 				if(newJob.getStart() > schedule.getListMax(id)){
 					int diff = newJob.getStart() - schedule.getListMax(id);
+					//TODO: Add blank job
 					newJob.addProccessTime(diff);
 				}
 			}	
@@ -33,16 +34,21 @@ public class LowerBoundConstraints implements LowerBoundList, Serializable{
 			int max = schedule.getMaxLength();
 			int remaining = getRemainingJobLength(jobs);
 			List<Integer> schedules = schedule.getAllJobLengths();
-			int diff = 0;
-			for (Integer len : schedules) {
-				diff += max - len;
-			}
+			int diff = getDifference(schedule, max);
 			
 			if(remaining<diff) lowerBound = max;
 			else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers();
 			lowerBound = schedule.getMaxLength();
 	}
 
+	private int getDifference(Schedule schedule, int max) {
+		int diff = 0;
+		for (Integer len : schedule.getAllJobLengths()) {
+			diff += max - len;
+		}
+		return diff;
+	}
+	
 	private int getRemainingJobLength(List<Job> jobs) {
 		int jobLength = 0;
 		for (Job job : jobs) {

@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Map.Entry;
 
+import system.Return;
 import util.Job;
 import util.JobList;
 import util.Schedule;
@@ -18,6 +18,7 @@ import api.TaskRecursive;
 public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	
 	
+	private static final int JOBFACTOR = 30;
 	private List<Job> jobs;
 	private int computers;
 	private Schedule schedule;
@@ -28,15 +29,10 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		this.computers = computers;
 		this.jobs = jobs;
 		schedule = new Schedule(computers);
-		// Choose lowerbound type
-		lowerBound = new LowerBoundLpt(computers, jobs);
-		// lowerBound = new LowerBoundSimple(computers, jobs);
+		lowerBound = new LowerBoundFillUp(computers, jobs);
 
-		
 	}
 	
-	
-
 	public ScheduleLptTasks(int computers, ScheduleLptTasks parent, List<Job> jobs, int id) {
 		this.computers = computers;
 		this.jobs = jobs;
@@ -47,22 +43,10 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		    copy.put(entry.getKey(), new JobList(entry.getValue()));
 		}
 		this.schedule = new Schedule(computers, copy , parent.getSchedule().getMaxLength());
-		
 		lowerBound = parent.lowerBound.make(this, this.jobs.remove(0), id);
 		
 	}
 
-
-	@Override
-	public boolean isAtomic() {
-		return jobs.size() <= 3;
-	}
-	
-	public LowerBound lowerBound(){ return lowerBound; };
-	
-	public double cost() { return lowerBound().cost(); }
-	
-	public Schedule getSchedule(){ return schedule; };
 
 	@Override
 	public ReturnValue<ResultSchedule> solve() {
@@ -93,25 +77,27 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	}
 
 	@Override
-	public ReturnDecomposition divideAndConquer() {
-		return new ReturnDecomposition(new CompareSchedules(), children(( (SharedSchedule) shared()).cost() ));
+	public Return divideAndConquer() {
+		SharedSchedule localShared = (SharedSchedule) shared();
+		List<ScheduleLptTasks> children = children(( localShared ).cost() );
+		if(children.size() == 0){
+			return new ReturnValueSchedule(this, new ResultSchedule(localShared.schedule(), localShared.cost()));
+		}
+		return new ReturnDecomposition(new CompareSchedules(), children);
 	}
 
 	private List<ScheduleLptTasks> children(double cost) {
 		List<ScheduleLptTasks> children = new LinkedList<>();
 		for (int i = 1; i <= computers; i++) {
 			ScheduleLptTasks child = new ScheduleLptTasks(computers, this, new ArrayList<Job>(jobs), i);
-			// Add priority
 			if(child.lowerBound().cost() < cost){
 				children.add(child);
-			} else {
-				//if(!isAtomic()) System.out.println("Prune");
-			}
+			} 
 		}
 		return children;
 	}
 	
-	private boolean isComplete() { return jobs.size() == 0; }
+	private boolean isComplete() { return jobs.isEmpty(); }
 	
 	public List<Job> getJobs(){
 		return jobs;
@@ -121,4 +107,15 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		return computers;
 	}
 	
+	@Override
+	public boolean isAtomic() {
+		return jobs.size() <= JOBFACTOR/computers;
+		
+	}
+	
+	public LowerBound lowerBound(){ return lowerBound; };
+	
+	public double cost() { return lowerBound().cost(); }
+	
+	public Schedule getSchedule(){ return schedule; };
 }

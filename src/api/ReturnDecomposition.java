@@ -24,10 +24,14 @@
 package api;
 
 import system.Task;
+
 import java.util.List;
 import java.util.UUID;
+
 import system.Return;
 import system.SpaceImpl;
+import tasks.ResultSchedule;
+import tasks.ReturnValueSchedule;
 
 public class ReturnDecomposition extends Return
 {    
@@ -73,7 +77,7 @@ public class ReturnDecomposition extends Return
     public void process( final Task parentTask, final SpaceImpl space ) 
     {
         compose.decomposeTaskRunTime( taskRunTime() );
-        space.putCompose( compose );
-        space.putReadyTasks( tasks );
+        	space.putCompose( compose );
+        	space.putReadyTasks( tasks );
     }
 }

@@ -8,10 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import tasks.ResultSchedule;
 import tasks.ScheduleLptTasks;
 import tasks.SharedSchedule;
 import util.Job;
 import util.Schedule;
+import util.UpperBound;
 import api.JobRunner;
 
 public class LptTest {
@@ -24,33 +26,40 @@ public class LptTest {
 		Random g = new Random();
 		//int m = g.nextInt(2) + 2;
 		int m = 3;
-		Schedule schedule = new Schedule(m);
 		int r = 0;
 		int j = 13;
+		int k = 0;
 //		System.out.println("Number of jobs: " + (j - 1));
 		System.out.println("Number of computers: " + m);
-		for (int i = 1; i <=6; i++) {
-			r = g.nextInt(20) + 1;
-			jobs.add(new Job(i,r));
+		SharedSchedule s;
+		Schedule schedule = new Schedule(m);
+		while(true){
+			k = 0;
+			schedule = new Schedule(m);
+			for (int i = 1; i <=18; i++) {
+				r = g.nextInt(20) + 1;
+				jobs.add(new Job(i,r));
+				k += r;
+			}
+			s = UpperBound.makeLPTBound(schedule, jobs, m);
+			if(s.cost() != k/(double)m) break;
 		}
 		
-		new JobRunner<Schedule>("Bla", args).run(new ScheduleLptTasks(m, jobs), makeLpt(schedule, jobs, m));
+//		jobs.add(new Job(1,4));
+//		jobs.add(new Job(2,4));
+//		jobs.add(new Job(3,3));
+//		jobs.add(new Job(4,2));
+//		jobs.add(new Job(5,3));
+//		jobs.add(new Job(6,4));
 
-	}
-
-	private static SharedSchedule makeLpt(Schedule schedule, List<Job> jobs, int m) {
 		
-		List<Job> joblist = new ArrayList<Job>(jobs);
-		Collections.sort(joblist);
-		int i = 0;
-		for(Job job: joblist){
-			i += job.getTime();
-			schedule.addJob(job);
-		}
-		System.out.println("Upper bound: " + schedule.getMaxLength());
-//		return new SharedSchedule(schedule, Integer.MAX_VALUE);
-		// 4/3 - 1/3m
-		if(schedule.getMaxLength() == i/(double)m) System.out.println("Lpt is optimal");
-		return new SharedSchedule(schedule, schedule.getMaxLength());
+		System.out.println("Upperbound: " + s.cost());
+
+		System.out.println("Lowerbound: " + (k/(double)m));
+		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleLptTasks(m, jobs), s);
+		System.out.println(result);
 	}
+
+	
+	
 }

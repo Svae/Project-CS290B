@@ -1,6 +1,7 @@
 package tasks;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import util.JobList;
 import util.Schedule;
@@ -29,13 +30,12 @@ public class SharedSchedule extends Shared<SharedSchedule> {
 	
 	@Override
 	public String toString() {
-		String s = "";
+		StringBuilder sb = new StringBuilder();
 		HashMap<Integer, JobList> l = schedule.getSchedule();
-		int i = 1;
-		for (JobList list : l.values() ) {
-			s += i + ": " + list.prettyprint() + "\n";
+		for (Entry<Integer, JobList> list : l.entrySet() ) {
+			sb.append(list.getKey() + ": " + list.getValue().toString() + "\n");
 		}
-		return s;
+		return sb.toString();
 	}
 
 }

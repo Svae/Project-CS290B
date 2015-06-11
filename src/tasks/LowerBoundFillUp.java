@@ -7,34 +7,37 @@ import java.util.List;
 import util.Job;
 import util.Schedule;
 
-public class LowerBoundLpt implements LowerBound, Serializable{
+public class LowerBoundFillUp implements LowerBound, Serializable{
 
 	private double lowerBound;
 	
 	
-	public LowerBoundLpt(int computers, List<Job> jobs) {
-		int jobLength = getRemainingJobLength(jobs);
-		lowerBound = ((double)jobLength)/computers;
-		System.out.println("Lower bound: " + lowerBound);
+	public LowerBoundFillUp(int computers, List<Job> jobs) {
+		lowerBound = getRemainingJobLength(jobs)/(double)computers;
 	}
 
 	
 	
-	public LowerBoundLpt(ScheduleLptTasks parent, Job newJob, int id) {
+	public LowerBoundFillUp(ScheduleLptTasks parent, Job newJob, int id) {
 		List<Job> jobs = parent.getJobs();
 		Schedule schedule = parent.getSchedule();
 		schedule.addJob(id, newJob);
 		int max = schedule.getMaxLength();
 		int remaining = getRemainingJobLength(jobs);
-		List<Integer> schedules = schedule.getAllJobLengths();
+		int diff = getDifference(schedule, max);
+		if(remaining<diff) lowerBound = max;
+		else lowerBound = max + ((remaining-diff)/(double)parent.getNumberOfComputers()); 
+		
+	}
+
+
+
+	private int getDifference(Schedule schedule, int max) {
 		int diff = 0;
-		for (Integer len : schedules) {
+		for (Integer len : schedule.getAllJobLengths()) {
 			diff += max - len;
 		}
-		
-		if(remaining<diff) lowerBound = max;
-		else lowerBound = max + (remaining-diff)/(double)parent.getNumberOfComputers(); 
-		
+		return diff;
 	}
 
 	
@@ -56,7 +59,7 @@ public class LowerBoundLpt implements LowerBound, Serializable{
 
 	@Override
 	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
-		return new LowerBoundLpt(parent, newJob, id);
+		return new LowerBoundFillUp(parent, newJob, id);
 	}
 
 

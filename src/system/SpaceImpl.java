@@ -60,7 +60,6 @@ public final class SpaceImpl extends UnicastRemoteObject implements Space
     
     final private AtomicInteger taskIds = new AtomicInteger();
     
-//    final private BlockingQueue<Task>   readyTaskQ = new LinkedBlockingQueue<>();
     final private BlockingDeque<Task>   readyTaskQ = new LinkedBlockingDeque<>();
 
     final private BlockingQueue<ReturnValue> resultQ = new LinkedBlockingQueue<>();

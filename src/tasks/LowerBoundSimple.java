@@ -9,12 +9,12 @@ public class LowerBoundSimple implements LowerBound{
 
 	private double lowerBound; 
 	
+	
 	public LowerBoundSimple(int computers, List<Job> jobs) {
-		int jobLength = getRemainingJobLength(jobs);
-		lowerBound = ((double)jobLength)/computers;
+		lowerBound = ((double)getRemainingJobLength(jobs))/computers;
 	}
 	
-	public LowerBoundSimple(ScheduleLptTasks parent, Job newJob, int id) {
+	public LowerBoundSimple(ScheduleTasks parent, Job newJob, int id) {
 			Schedule schedule = parent.getSchedule();
 			schedule.addJob(id, newJob);
 			lowerBound = schedule.getMaxLength();
@@ -22,13 +22,12 @@ public class LowerBoundSimple implements LowerBound{
 
 
 	@Override
-	public LowerBoundSimple make(ScheduleLptTasks parent, Job newJob, int id) {
+	public LowerBoundSimple make(ScheduleTasks parent, Job newJob, int id) {
 		return new LowerBoundSimple(parent, newJob, id);
 	}
 
 	@Override
 	public double cost() {
-		// TODO Auto-generated method stub
 		return lowerBound;
 	}
 	

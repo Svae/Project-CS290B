@@ -9,7 +9,7 @@ import java.util.Random;
 
 import tasks.ResultSchedule;
 import tasks.ScheduleListTasks;
-import tasks.ScheduleLptTasks;
+import tasks.ScheduleTasks;
 import tasks.SharedSchedule;
 import util.Job;
 import util.Schedule;
@@ -27,7 +27,10 @@ public class ClientScheduleConstraints {
 		int m = 3;
 		Schedule schedule = new Schedule(m);
 		SharedSchedule s = UpperBound.makeListBound(schedule, jobs);
+		
 		schedule = new Schedule(m);
+		System.out.println("Number of computers: " + m);
+		System.out.println("Number of jobs: " + jobs.size());
 		System.out.println("Upperbound: " + s.cost());
 		ResultSchedule result = new JobRunner<ResultSchedule>(args).run(new ScheduleListTasks(m, jobs), s);
 		System.out.println(result.toString());

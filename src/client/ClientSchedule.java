@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import tasks.ResultSchedule;
-import tasks.ScheduleLptTasks;
+import tasks.ScheduleTasks;
 import tasks.SharedSchedule;
 import util.Job;
 import util.Schedule;
@@ -41,9 +41,9 @@ public class ClientSchedule {
 //		SharedSchedule s = UpperBound.makeLPTBound(schedule, jobs, m);
 		SharedSchedule s = new SharedSchedule(schedule, Integer.MAX_VALUE);
 		System.out.println("Upperbound: " + s.cost());
-		System.out.println("Lowerbound: " + (k/(double)m));
+		System.out.println("Total job time / number of computers: " + (k/(double)m));
 		JobRunner<ResultSchedule> jr = new JobRunner<ResultSchedule>(args);
-		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), s);
+		ResultSchedule result = jr.run(new ScheduleTasks(m, jobs), s);
 		System.out.println(result);
 		//1. fill up, simple, zero lb
 		//

@@ -33,10 +33,7 @@ public class Schedule implements Serializable{
 		this.schedule = schedule;
 		this.maxLength = maxLength;
 	}
-	
-	
-	
-	
+		
 	private void init() {
 		for (int i = 1; i <= computers; i++) {
 			schedule.put(i, new JobList());

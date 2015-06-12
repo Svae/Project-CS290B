@@ -10,10 +10,10 @@ public class JobList implements Serializable{
 	private int maxLength;
 	private boolean constraints;
 
-	
 	public JobList(){
 		jobs = new ArrayList<Job>();
 		maxLength = 0;
+		this.constraints = false;
 	}
 	
 	public JobList(boolean constraints){
@@ -27,6 +27,7 @@ public class JobList implements Serializable{
 		this.maxLength = value.getMaxLength();
 	}
 
+	
 	public void addJob(Job j){
 		j.setStart(maxLength);
 		jobs.add(j);

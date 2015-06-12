@@ -19,6 +19,9 @@ import api.TaskRecursive;
 
 public class ScheduleListTasks extends TaskRecursive<ResultSchedule> {
 	
+	/**
+	 * Finds the optimal schedule for a list of jobs with dependences
+	 */
 	
 	private static final int JOBFACTOR = 10;
 	private List<Job> jobs;

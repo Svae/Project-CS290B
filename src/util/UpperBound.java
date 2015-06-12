@@ -8,22 +8,44 @@ import tasks.SharedSchedule;
 
 public class UpperBound {
 
-	// 4/3 - 1/3m
-	public static SharedSchedule makeLPTBound(Schedule schedule, List<Job> jobs, int m) {
+	/**
+     * Compute the LPT approximation for a given task list and a given 
+     * number of computers. The approximation is bounded by Fapprox/Foptimal = 4/3 - 1/3m
+     *  
+     * @param schedule schedule that is used in the computation
+     * @param jobs list of jobs to be scheduled
+     * @return A SharedSchedule containing the LPT approx. schedule
+     */
+	
+	public static SharedSchedule makeLPTBound(Schedule schedule, List<Job> jobs) {
 		
 		List<Job> joblist = new ArrayList<Job>(jobs);
 		Collections.sort(joblist);
-		int i = 0;
 		for(Job job: joblist){
-			i += job.getTime();
 			schedule.addJob(job);
 		}
 		return new SharedSchedule(schedule, schedule.getMaxLength());
 	}
 	
+	/**
+     * Compute the LPT approximation for a given task list and a given 
+     * number of computers.
+     * 
+     * @return A SharedSchedule with cost Integer.MAX_VALUE
+     */
 	public static SharedSchedule makeInfBound(){
 		return new SharedSchedule(null, Integer.MAX_VALUE);
 	}
+	
+	
+	/**
+    * Compute the List approximation for a given task list and a given 
+    * number of computers. The approximation is bounded by Fapprox/Foptimal = 2 - 1/m
+    *  
+    * @param schedule schedule that is used in the computation
+    * @param jobs list of jobs to be scheduled
+    * @return A SharedSchedule containing the List approx. schedule
+    */
 	
 	public static SharedSchedule makeListBound(Schedule schedule, List<Job> jobs){
 		

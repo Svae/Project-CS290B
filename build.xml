@@ -75,6 +75,10 @@
         </java>
     </target>
     
+    <target name="javadoc" description="create javadocs">
+		<javadoc packagenames="tasks.*,api.*, util.*, system.*" sourcepath="${src}" destdir="documents/javadoc"/>
+	</target>
+    
 
     <target name="clean" description="clean up">
     <!--  Delete the ${build} and ${dist} directory trees  -->

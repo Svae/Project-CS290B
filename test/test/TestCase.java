@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tasks.ResultSchedule;
-import tasks.ScheduleLptTasks;
+import tasks.ScheduleTasks;
 import tasks.ScheduleListTasks;
 import tasks.SharedSchedule;
 import util.Job;
@@ -23,13 +23,13 @@ import util.Schedule;
 import util.UpperBound;
 import api.JobRunner;
 
-public class LPTtest {
+public class TestCase {
 	
 	private JobRunner<ResultSchedule> jr;
 	
 	@Before
 	public void setUp() throws RemoteException, MalformedURLException, NotBoundException{
-		String[] args = {};  //{"localhost"};
+		String[] args = {}; 
 		jr = new JobRunner<ResultSchedule>(args);
 	}
 	
@@ -48,9 +48,9 @@ public class LPTtest {
 		jobs.add(new Job(7,3));
 		jobs.add(new Job(8,3));
 
-		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs, m);
+		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs);
 		assertEquals(10, upperbound.cost());
-		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), upperbound );
+		ResultSchedule result = jr.run(new ScheduleTasks(m, jobs), upperbound );
 		assertEquals(result.cost(), 9);
 		
 	}
@@ -72,9 +72,9 @@ public class LPTtest {
 		jobs.add(new Job(8,2));
 		jobs.add(new Job(9,2));
 		
-		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs, m);
+		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs);
 		assertEquals(20, upperbound.cost());
-		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), upperbound );
+		ResultSchedule result = jr.run(new ScheduleTasks(m, jobs), upperbound );
 		assertEquals(result.cost(), 20);
 		
 
@@ -101,13 +101,13 @@ public class LPTtest {
 				jobs.add(new Job(i,r));
 				k += r;
 			}
-			upperbound = UpperBound.makeLPTBound(schedule, jobs, m);
+			upperbound = UpperBound.makeLPTBound(schedule, jobs);
 
 		double lb = (k/(double)m);
 		System.out.println("Upperbound: " + upperbound.cost());
 
 		System.out.println("Lowerbound: " + lb );
-		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), upperbound);
+		ResultSchedule result = jr.run(new ScheduleTasks(m, jobs), upperbound);
 		System.out.println("Result cost: " + result.cost());
 		assertTrue(upperbound.cost()>=result.cost());
 		assertTrue(lb <= result.cost());
@@ -144,7 +144,7 @@ public class LPTtest {
 		jobs.add(new Job(8,3, dep1));
 		jobs.add(new Job(9,8, dep));
 		
-		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs, m);
+		SharedSchedule upperbound = UpperBound.makeLPTBound(schedule, jobs);
 		assertEquals(18, upperbound.cost());
 		ResultSchedule result = jr.run(new ScheduleListTasks(m, jobs), upperbound );
 		assertEquals(result.cost(), 18);

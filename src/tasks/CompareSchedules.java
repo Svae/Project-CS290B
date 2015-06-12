@@ -6,9 +6,9 @@ import api.TaskCompose;
 public class CompareSchedules extends TaskCompose<ResultSchedule>{
 
 	/**
-    * Compares schedules based on the longest time for it to be done
+    * Compares schedules based on the longest completion time
     * 
-    * @return returns the schedule with the shortest max length
+    * @return returns the schedule with the shortest completion time
     */
 	
 	@Override

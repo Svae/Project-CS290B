@@ -23,17 +23,20 @@
  */
 package tasks;
 
+import java.io.Serializable;
+
 import util.Job;
-import util.Schedule;
 
 /**
- * 
- * 
+ * Interface for lower bound used for scheduling without constraints
+ * Inspired by Peter Cappello
  */
-public interface LowerBound
+
+
+public interface LowerBound extends Serializable
 {
     double cost();
 
-	LowerBound make(ScheduleLptTasks parent, Job newJob, int id);
+	LowerBound make(ScheduleTasks parent, Job newJob, int id);
     
 }

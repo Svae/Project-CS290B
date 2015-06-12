@@ -16,8 +16,11 @@ import api.ReturnValue;
 import api.TaskRecursive;
 
 
-public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
+public class ScheduleTasks extends TaskRecursive<ResultSchedule> {
 	
+	/**
+	 * Finds the optimal schedule for a list of jobs without dependences
+	 */
 	
 	private static final int JOBFACTOR = 10;
 	private List<Job> jobs;
@@ -26,7 +29,7 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	private LowerBound lowerBound;
 	
 	
-	public ScheduleLptTasks(int computers, List<Job> jobs) {
+	public ScheduleTasks(int computers, List<Job> jobs) {
 		this.computers = computers;
 		this.jobs = jobs;
 		schedule = new Schedule(computers);
@@ -34,7 +37,7 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 
 	}
 	
-	public ScheduleLptTasks(int computers, ScheduleLptTasks parent, List<Job> jobs, int id) {
+	public ScheduleTasks(int computers, ScheduleTasks parent, List<Job> jobs, int id) {
 		this.computers = computers;
 		this.jobs = jobs;
 
@@ -51,16 +54,16 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 
 	@Override
 	public ReturnValue<ResultSchedule> solve() {
-		final Stack<ScheduleLptTasks> stack = new Stack<>();
+		final Stack<ScheduleTasks> stack = new Stack<>();
         stack.push( this );
         SharedSchedule sharedSchedule = ( SharedSchedule ) shared();
         Schedule shortestSchedule = sharedSchedule.schedule();
         double shortestScheduleCost = sharedSchedule.cost();
         while ( ! stack.isEmpty() ) 
         {
-        	ScheduleLptTasks currentTask = stack.pop();
-            List<ScheduleLptTasks> children = currentTask.children( shortestScheduleCost );
-            for ( ScheduleLptTasks child : children )
+        	ScheduleTasks currentTask = stack.pop();
+            List<ScheduleTasks> children = currentTask.children( shortestScheduleCost );
+            for ( ScheduleTasks child : children )
             {   // child lower bound < upper bound.
                 if ( child.isComplete() )
                 { 
@@ -80,17 +83,17 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 	@Override
 	public Return divideAndConquer() {
 		SharedSchedule localShared = (SharedSchedule) shared();
-		List<ScheduleLptTasks> children = children(( localShared ).cost() );
+		List<ScheduleTasks> children = children(( localShared ).cost() );
 		if(children.size() == 0){
 			return new ReturnValueSchedule(this, new ResultSchedule(localShared.schedule(), localShared.cost()));
 		}
 		return new ReturnDecomposition(new CompareSchedules(), children);
 	}
 
-	private List<ScheduleLptTasks> children(double cost) {
-		List<ScheduleLptTasks> children = new LinkedList<>();
+	private List<ScheduleTasks> children(double cost) {
+		List<ScheduleTasks> children = new LinkedList<>();
 		for (int i = 1; i <= computers; i++) {
-			ScheduleLptTasks child = new ScheduleLptTasks(computers, this, new ArrayList<Job>(jobs), i);
+			ScheduleTasks child = new ScheduleTasks(computers, this, new ArrayList<Job>(jobs), i);
 			if(child.lowerBound().cost() < cost){
 				children.add(child);
 			} 

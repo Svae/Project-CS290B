@@ -2,9 +2,9 @@ package tasks;
 
 import java.util.List;
 
-
 import util.Job;
 import util.Schedule;
+import util.ScheduleUtil;
 
 public class LowerBoundSimpleConstraints implements LowerBoundList{
 
@@ -12,11 +12,7 @@ public class LowerBoundSimpleConstraints implements LowerBoundList{
 	
 	
 	public LowerBoundSimpleConstraints(int computers, List<Job> jobs) {
-		int jobLength = 0;
-		for (Job job : jobs) {
-			jobLength += job.getTime();
-		}
-		lowerBound = ((double)jobLength)/computers;
+		lowerBound = ScheduleUtil.getRemainingJobLength(jobs)/(double)computers;
 		System.out.println("Lower bound: " + lowerBound);
 	}
 	

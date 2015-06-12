@@ -84,7 +84,8 @@ public class LPTtest {
 	@Test
 	public void randomSchedule() throws RemoteException{
 		List<Job> jobs = new ArrayList<Job>();
-		Random g = new Random();
+		long seed = 1;
+		Random g = new Random(1);
 		int m = g.nextInt(2) + 2;
 		int r;
 		int j = 13;

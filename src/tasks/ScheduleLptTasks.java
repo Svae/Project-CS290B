@@ -30,7 +30,7 @@ public class ScheduleLptTasks extends TaskRecursive<ResultSchedule> {
 		this.computers = computers;
 		this.jobs = jobs;
 		schedule = new Schedule(computers);
-		lowerBound = new LowerBoundFillUp(computers, jobs);
+		lowerBound = new LowerBoundZero(computers, jobs);
 
 	}
 	

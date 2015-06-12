@@ -27,8 +27,8 @@ import util.Job;
 import util.Schedule;
 
 /**
- *
- * @author Peter Cappello
+ * 
+ * 
  */
 public interface LowerBound
 {

@@ -1,9 +1,13 @@
 package tasks;
 
+import java.util.List;
+
 import util.Job;
 
 public class LowerBoundZero implements LowerBound {
 	
+	
+	public LowerBoundZero(Integer computers, List<Job> jobs) {}
 	
 	@Override
 	public double cost() {
@@ -12,7 +16,7 @@ public class LowerBoundZero implements LowerBound {
 
 	@Override
 	public LowerBound make(ScheduleLptTasks parent, Job newJob, int id) {
-		return new LowerBoundZero();
+		return new LowerBoundZero(id, null);
 	}
 	
 

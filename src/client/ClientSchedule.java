@@ -23,8 +23,7 @@ public class ClientSchedule {
 	
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
 		List<Job> jobs = new ArrayList<Job>();
-		Random g = new Random();
-		//int m = g.nextInt(2) + 2;
+		Random g = new Random(2);
 		int m = 3;
 		int r;
 		int j = 14;
@@ -38,13 +37,16 @@ public class ClientSchedule {
 			jobs.add(new Job(i,r));
 			k += r;
 		}
-		
-		SharedSchedule s = UpperBound.makeLPTBound(schedule, jobs, m);
+		// En med UB og uten, fill up som lb
+//		SharedSchedule s = UpperBound.makeLPTBound(schedule, jobs, m);
+		SharedSchedule s = new SharedSchedule(schedule, Integer.MAX_VALUE);
 		System.out.println("Upperbound: " + s.cost());
 		System.out.println("Lowerbound: " + (k/(double)m));
 		JobRunner<ResultSchedule> jr = new JobRunner<ResultSchedule>(args);
 		ResultSchedule result = jr.run(new ScheduleLptTasks(m, jobs), s);
 		System.out.println(result);
+		//1. fill up, simple, zero lb
+		//
 		
 	}
 
